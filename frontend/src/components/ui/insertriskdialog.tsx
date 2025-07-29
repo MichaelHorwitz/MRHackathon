@@ -22,7 +22,7 @@ export function InsertRiskDialog({ onInsert }: Props) {
   const [form, setForm] = useState<Omit<Risk, "id">>({ 
    location: "", 
    riskLevel: "Low", 
-   checkedDate: new Date().toISOString().slice(0, 10), // YYYY-MM-DD 
+   checkedDate: new Date(),
  })
   const [saving, setSaving] = useState(false)
 
@@ -32,7 +32,7 @@ export function InsertRiskDialog({ onInsert }: Props) {
     setSaving(false)
     setOpen(false)
     // reset form for next time
-    setForm({ location: "", riskLevel: "Low" ,checkedDate: new Date().toISOString().slice(0, 10)})
+    setForm({ location: "", riskLevel: "Low" ,checkedDate: new Date()})
   }
 
   return (

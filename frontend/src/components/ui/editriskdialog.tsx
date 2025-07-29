@@ -47,8 +47,9 @@ export function EditRiskDialog({ risk, onSave }: Props) {
                 setForm((prev) => ({
                   ...prev,
                   location: newLocation,
-                  // reset checkedDate to today in YYYY-MM-DD form:
-                  checkedDate: new Date().toISOString().slice(0, 10),
+                  // reset checkedDate to current date as date type
+                  // to ensure it is always updated when editing
+                  checkedDate: new Date(),
                 }))
               }}            
           />
@@ -61,7 +62,7 @@ export function EditRiskDialog({ risk, onSave }: Props) {
                 ...prev,
                 riskLevel: newLevel,
                 // bump checkedDate to today:
-                checkedDate: new Date().toISOString().slice(0, 10),
+                checkedDate: new Date(),
               }))
             }}
           >

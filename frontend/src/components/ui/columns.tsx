@@ -10,7 +10,7 @@ import { DeleteRiskDialog } from "@/components/ui/deleteriskdialog"
 export type Risk = {
   id: number
   location: string,
-  checkedDate: string,
+  checkedDate: Date,
   riskLevel: "Low" | "Medium" | "High"
 }
 
@@ -46,7 +46,7 @@ export const createRiskColumns = (
     accessorKey: "checkedDate",
     header: "Checked Date",
     cell: ({ row }) => {
-        return row.getValue<string>("checkedDate")
+        return row.getValue<Date>("checkedDate").toISOString().slice(0, 10)
     },
   },
   {
