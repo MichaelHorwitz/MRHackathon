@@ -193,6 +193,9 @@ export interface components {
             email: string;
             name: string;
             password: string;
+            watchedLocations: string;
+            /** Format: date-time */
+            expectedTravelDate: string;
         };
         CreateUserResponseDto: {
             id: number;
@@ -203,8 +206,14 @@ export interface components {
             id: number;
             name: string;
             email: string;
+            /** Format: date-time */
+            expectedTravelDate: string;
+            watchedLocations: string;
         };
         UpdateProfileDto: {
+            /** Format: date-time */
+            expectedTravelDate: string;
+            watchedLocations: string;
             email?: string;
             name?: string;
             password?: string;
@@ -214,11 +223,17 @@ export interface components {
             password: string;
             name: string;
             email: string;
+            /** Format: date-time */
+            expectedTravelDate: string;
+            watchedLocations: string[];
         };
         UpdateUserDto: {
             email?: string;
             name?: string;
             password?: string;
+            watchedLocations?: string;
+            /** Format: date-time */
+            expectedTravelDate?: string;
         };
     };
     responses: never;

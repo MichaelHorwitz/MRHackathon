@@ -74,7 +74,13 @@ export class AuthController {
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...sanitizedResult } = result;
-    return sanitizedResult;
+    //watchedLocations
+    return {
+      ...sanitizedResult,
+      watchedLocations: Array.isArray(sanitizedResult.watchedLocations)
+        ? sanitizedResult.watchedLocations.join(', ')
+        : sanitizedResult.watchedLocations,
+    };
   }
   @UseGuards(AuthGuard('jwt'))
   @Put('profile')
@@ -90,6 +96,11 @@ export class AuthController {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...sanitizedResult } = result;
     Logger.debug(`Updated: ${JSON.stringify(sanitizedResult)}`);
-    return sanitizedResult;
+    return {
+      ...sanitizedResult,
+      watchedLocations: Array.isArray(sanitizedResult.watchedLocations)
+        ? sanitizedResult.watchedLocations.join(', ')
+        : sanitizedResult.watchedLocations,
+    };
   }
 }
