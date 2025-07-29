@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UtilsController } from './utils/utils.controller';
+import { UtilsService } from './utils/utils.service';
+import { HealthCheckService, HttpHealthIndicator, TerminusModule } from '@nestjs/terminus';
+import { UtilsModule } from './utils/utils.module';
 import { MonitoredDestinationModule } from './monitored-destination/monitored-destination.module';
 
 @Module({
@@ -9,7 +13,7 @@ import { MonitoredDestinationModule } from './monitored-destination/monitored-de
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
-      port: 5432,
+      port: process.env.DB_PORT as unknown as number,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
@@ -17,9 +21,13 @@ import { MonitoredDestinationModule } from './monitored-destination/monitored-de
       synchronize: true,
       autoLoadEntities: true,
     }),
-    MonitoredDestinationModule,
+  UtilsModule,
+  TerminusModule,
+  MonitoredDestinationModule
+
   ],
   controllers: [AppController],
   providers: [AppService],
-})
+  // providers: [AppService, UtilsService, HealthCheckService, HttpHealthIndicator],
+})  
 export class AppModule {}
