@@ -81,7 +81,7 @@ export function   ProfileForm(props: { defaultValue?: Partial<ProfileData> }) {
             <legend className="ml-2 text-sm font-semibold">Preferences</legend>
             <div className="space-y-6 my-3">
               <div className="space-y-3">
-                <Label htmlFor={set1Id}>Setting #1</Label>
+                <Label htmlFor={set1Id}>Expected Travel Date</Label>
                 <Input
                   id={set1Id}
                   name="expectedTravelDate"
@@ -99,7 +99,7 @@ export function   ProfileForm(props: { defaultValue?: Partial<ProfileData> }) {
                 />
               </div>
               <div className="space-y-3">
-                <Label htmlFor={set2Id}>Setting #2</Label>
+                <Label htmlFor={set2Id}>Watched Locations</Label>
                 <Input
                   id={set2Id}
                   name="watchedLocations"
