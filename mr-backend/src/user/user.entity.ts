@@ -5,6 +5,18 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ unique: true })
+  username: string;
+
+  @Column({ nullable: true })
+  watch_list_notifications: string;
+
   @Column()
-  name: string;
+  password: string;
+
+  @Column()
+  salt: string;
 }
