@@ -12,8 +12,8 @@ const profileSchema = z.object({
     .email("Please enter a valid email")
     .nonempty("Email can not be empty"),
   password: z.string(),
-  setting1: z.string().nonempty("Setting #1 can not be empty"),
-  setting2: z.string().nonempty("Setting #2 can not be empty"),
+  expectedTravelDate: z.coerce.date(),
+  watchedLocations: z.string(),
 });
 
 export type ProfileData = z.infer<typeof profileSchema>;
@@ -39,6 +39,9 @@ export async function updateProfile(_state: unknown, formData: FormData) {
     body: {
       email: value.email,
       name: value.name,
+      expectedTravelDate: value.expectedTravelDate.toISOString(),
+      password: value.password,
+      watchedLocations: value.watchedLocations
     }
   });
   if (result.response.status !== 200){

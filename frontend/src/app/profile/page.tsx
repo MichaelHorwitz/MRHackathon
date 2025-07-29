@@ -14,6 +14,8 @@ export default async function Page() {
       defaultValue={{
         name: data.data?.name,
         email: data.data?.email,
+        expectedTravelDate: data.data?.expectedTravelDate ? new Date(data.data.expectedTravelDate) : undefined,
+        watchedLocations: data.data?.watchedLocations
       }}
     />
   );
