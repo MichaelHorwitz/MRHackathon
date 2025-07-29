@@ -3,38 +3,38 @@ import {
     InternalServerErrorException,
     UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { AuthLoginDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
+    constructor(private configService: ConfigService) { }
     // todo - remove this with database check
     private readonly defaultUser = {
         id: '123',
-        email: 'default@user.com',
-        password: 'password123',
-        role: 'user',
+        username: 'default@user.com',
+        password: 'password123'
     };
 
     login(authDto: AuthLoginDto) {
-        const { email, password } = authDto;
+        const { username, password } = authDto;
 
         if (
-            email !== this.defaultUser.email ||
+            username !== this.defaultUser.username ||
             password !== this.defaultUser.password
         ) {
             throw new UnauthorizedException('Invalid credentials');
         }
 
         const payload = {
-            sub: this.defaultUser.id,
-            email: this.defaultUser.email,
-            role: this.defaultUser.role,
+            id: this.defaultUser.id,
+            username: this.defaultUser.username,
         };
 
-        const jwtSecret = process.env.JWT_SECRET;
+        const jwtSecret = this.configService.get<string>('JWT_SECRET');
         if (!jwtSecret) {
-            throw new InternalServerErrorException('JWT secret not configured');
+            throw new InternalServerErrorException();
         }
         const token = jwt.sign(payload, jwtSecret, {
             expiresIn: '1h',

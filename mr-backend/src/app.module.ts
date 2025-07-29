@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 // import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,6 +8,9 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // makes ConfigModule global, no need to import elsewhere
+    }),
     // TypeOrmModule.forRoot({
     //   type: 'postgres',
     //   host: process.env.DB_HOST,
@@ -19,5 +23,5 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,],
   controllers: [AppController],
   providers: [AppService, AuthService],
-})  
-export class AppModule {}
+})
+export class AppModule { }
