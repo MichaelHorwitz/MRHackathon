@@ -25,15 +25,15 @@ export class UserController {
     return this.userService.findAll();
   }
 
-    /** GET /users/:id */
-    @Get(':id')
-    async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
-      const user = await this.userService.findOne(id);
-      if (!user) {
-        throw new NotFoundException(`User with ID ${id} not found`);
-      }
-      return user;
+  /** GET /users/:id */
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    const user = await this.userService.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
+    return user;
+  }
 
   /** POST /users */
   @Post()
