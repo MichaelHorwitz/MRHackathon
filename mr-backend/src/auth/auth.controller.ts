@@ -13,6 +13,7 @@ import { AuthService, SafeUser } from './auth.service';
 import { LoginDto, LoginResponseDto } from './dto/login.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/user/dto/requests-formats';
+import { CreateUserResponseDto } from 'src/user/dto/create-user.dto';
 
 interface AuthenticatedRequest extends Request {
     user: SafeUser;

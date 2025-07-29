@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import * as crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDto, UpdateUserDto } from './dto/requests-formats';
 import { ResetPasswordDto } from './dto/requests-formats';
 
@@ -25,17 +25,24 @@ export class UserService {
     return this.repo.findOneBy({ email });
   }
 
-  saltAndHashPassword(password: string): { salt: string; hashedPassword: string } {
-    const salt = crypto.randomBytes(16).toString('hex');
-    const hash = crypto.createHash('sha256');
-    hash.update(password + salt);
-    const hashedPassword = hash.digest('hex');
-    return { salt, hashedPassword };
-  }
+  // saltAndHashPassword(password: string): { salt: string; hashedPassword: string } {
+  //   const salt = crypto.randomBytes(16).toString('hex');
+  //   const hash = crypto.createHash('sha256');
+  //   hash.update(password + salt);
+  //   const hashedPassword = hash.digest('hex');
+  //   return { salt, hashedPassword };
+  // }
+
+  // comparePassword(password: string, hashedPassword: string, salt: string): boolean {
+  //   const hash = crypto.createHash('sha256');
+  //   hash.update(password + salt);
+  //   const computedHash = hash.digest('hex');
+  //   return computedHash === hashedPassword;
+  // }
 
   async create(dto: CreateUserDto) {
-    const { salt, hashedPassword } = this.saltAndHashPassword(dto.password);
-    return this.repo.save({ ...dto, password: hashedPassword, salt });
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    return this.repo.save({ ...dto, password: hashedPassword });
   }
 
   async update(id: number, dto: UpdateUserDto) {
@@ -50,9 +57,8 @@ export class UserService {
     const user: User | null = await this.repo.findOneBy({ id });
     if (!user) return null;
 
-    const { salt, hashedPassword } = this.saltAndHashPassword(dto.password);
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
     user.password = hashedPassword;
-    user.salt = salt;
 
     return this.repo.save(user);
   }
