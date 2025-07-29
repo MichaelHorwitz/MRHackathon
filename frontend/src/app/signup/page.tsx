@@ -41,6 +41,7 @@ export default function Page() {
               name="name"
               type="text"
               placeholder="First name, e.g. John"
+              defaultValue={state?.error?.data["name"] as string}
             />
           </div>
 
@@ -51,6 +52,7 @@ export default function Page() {
               name="email"
               type="email"
               placeholder="placeholder@example.com"
+              defaultValue={state?.error?.data["email"] as string}
             />
           </div>
           <div className="space-y-3">
@@ -60,6 +62,7 @@ export default function Page() {
               name="password"
               type="password"
               placeholder="********"
+              defaultValue={state?.error?.data["password"] as string}
             />
           </div>
 
@@ -70,6 +73,7 @@ export default function Page() {
               name="confirmPassword"
               type="password"
               placeholder="********"
+              defaultValue={state?.error?.data["confirmPassword"] as string}
             />
           </div>
         </form>
@@ -78,7 +82,7 @@ export default function Page() {
         {state?.error && (
           <p className="text-destructive text-sm">
             <b>Error: </b>
-            {state.error}
+            {state?.error.message}
           </p>
         )}
         <Button form={formId} disabled={pending}>
