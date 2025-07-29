@@ -44,7 +44,7 @@ export class NotifsController {
     this.notifsService.markAsRead(id);
   }
 
-  @Get('/mark-all-read')
+  @Post('/mark-all-read')
   markAllAsRead() {
     console.log('Mark all Read');
     this.notifsService.markAllAsRead();

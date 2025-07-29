@@ -25,3 +25,14 @@ export async function markAsRead(_state: unknown, formData: FormData) {
 
   redirect("/alerts", RedirectType.replace);
 }
+
+export async function markAllAsRead(_state: unknown, formData: FormData) {
+  const result = await client.POST("/notifs/mark-all-read").then(toResult);
+  if (result.error) {
+    return {
+      error: result.error.message,
+    };
+  }
+
+  redirect("/alerts", RedirectType.replace);
+}
