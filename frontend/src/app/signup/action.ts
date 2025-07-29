@@ -7,4 +7,5 @@ export async function signup(state: unknown, formData: FormData) {
   const obj = getFormObject(formData);
   await new Promise((res) => setTimeout(res, 1000));
   console.log(obj);
+  return { error: "Not Implemented" };
 }

@@ -53,6 +53,12 @@ export default function Page() {
         </form>
       </CardContent>
       <CardFooter className="flex-col items-stretch gap-4">
+        {state?.error && (
+          <p className="text-destructive text-sm">
+            <b>Error: </b>
+            {state.error}
+          </p>
+        )}
         <Button form={formId} disabled={pending}>
           {pending ? <LoaderCircleIcon className="animate-spin" /> : "Login"}
         </Button>
