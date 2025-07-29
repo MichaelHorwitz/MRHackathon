@@ -186,10 +186,18 @@ export interface components {
              */
             password: string;
         };
+        LoginResponseDto: {
+            access_token: string;
+        };
         CreateUserDto: {
             email: string;
             name: string;
             password: string;
+        };
+        CreateUserResponseDto: {
+            id: number;
+            name: string;
+            email: string;
         };
         User: {
             id: number;
@@ -462,7 +470,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["LoginResponseDto"];
+                };
             };
         };
     };
@@ -483,7 +493,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["CreateUserResponseDto"];
+                };
             };
         };
     };

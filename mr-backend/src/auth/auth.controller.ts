@@ -10,9 +10,12 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService, SafeUser } from './auth.service';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto, LoginResponseDto } from './dto/login.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import {
+  CreateUserDto,
+  CreateUserResponseDto,
+} from 'src/user/dto/create-user.dto';
 
 interface AuthenticatedRequest extends Request {
   user: SafeUser;
@@ -26,11 +29,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(@Body() dto: LoginDto, @Request() req: AuthenticatedRequest) {
+  login(
+    @Body() dto: LoginDto,
+    @Request() req: AuthenticatedRequest,
+  ): LoginResponseDto {
     return this.authService.login(req.user);
   }
   @Post('signUp')
-  async signUp(@Body() dto: CreateUserDto) {
+  async signUp(@Body() dto: CreateUserDto): Promise<CreateUserResponseDto> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _, ...result } = await this.authService.signUp(dto);
