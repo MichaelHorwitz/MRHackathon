@@ -17,7 +17,7 @@ export default async function Page() {
           <Card key={item.id} className="p-2 pl-4 items-center flex-row">
             <p className="grow font-semibold">{item.title}</p>
             <p className="text-muted-foreground">{item.created_at}</p>
-            <MarkAsRead id={item.id} />
+            {item.status === "Unread" && <MarkAsRead id={item.id} />}
           </Card>
         ))}
       </ul>

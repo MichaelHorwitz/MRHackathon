@@ -278,8 +278,9 @@ export interface components {
             id: number;
             title: string;
             /** Format: date-time */
-            created_at?: string;
-            status: number;
+            created_at: string;
+            /** @enum {string} */
+            status: "Read" | "Unread";
         };
         CreateNotificationDto: {
             title: string;
