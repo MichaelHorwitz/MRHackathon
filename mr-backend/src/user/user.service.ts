@@ -10,15 +10,20 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly repo: Repository<User>,
-  ) {}
+  ) { }
 
-  findAll()            { return this.repo.find(); }
-  findOne(id: number)  { return this.repo.findOneBy({ id }); }
+  findAll() { return this.repo.find(); }
+  findOne(id: number) { return this.repo.findOneBy({ id }); }
   create(dto: CreateUserDto) { return this.repo.save(dto); }
   update(id: number, dto: UpdateUserDto) {
     return this.repo.save({ ...dto, id });
   }
   async remove(id: number) {
     await this.repo.delete(id);
+  }
+
+
+  async findByUsername(username: string): Promise<User | null> {
+    return this.repo.findOne({ where: { username } });
   }
 }

@@ -1,37 +1,26 @@
-import {
-    Injectable,
-    InternalServerErrorException,
-    UnauthorizedException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as jwt from 'jsonwebtoken';
-import { AuthLoginDto } from './dto/auth.dto';
+
+import { Injectable } from '@nestjs/common';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
-    constructor(private configService: ConfigService) { }
-    // todo - remove this with database check
-    private readonly defaultUser = {
-        id: '123',
-        username: 'default@user.com',
-        password: 'password123'
-    };
+    constructor(private userService: UserService) { }
 
-    login(authDto: AuthLoginDto) {
-        const { username, password } = authDto;
-
-        if (
-            username !== this.defaultUser.username ||
-            password !== this.defaultUser.password
-        ) {
-            throw new UnauthorizedException('Invalid credentials');
+    async validateUser(username: string, pass: string): Promise<any> {
+        const user = await this.userService.findByUsername(username);
+        if (user && user.password === pass) {
+            const { password, ...result } = user;
+            return result;
         }
+        return null;
+    }
 
+    login(user: any) {
+        // user is already validated by Passport local strategy
         const payload = {
-            id: this.defaultUser.id,
-            username: this.defaultUser.username,
+            id: user.id,
+            username: user.username,
         };
-
         const jwtSecret = this.configService.get<string>('JWT_SECRET');
         if (!jwtSecret) {
             throw new InternalServerErrorException();
@@ -39,7 +28,6 @@ export class AuthService {
         const token = jwt.sign(payload, jwtSecret, {
             expiresIn: '1h',
         });
-
         return { access_token: token };
     }
 }
