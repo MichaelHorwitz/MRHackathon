@@ -1,9 +1,11 @@
+// components/ui/columns.ts
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
 import { EditRiskDialog } from "@/components/ui/editriskdialog"
+import { DeleteRiskDialog } from "@/components/ui/deleteriskdialog"
 
 export type Risk = {
   id: number
@@ -12,7 +14,8 @@ export type Risk = {
 }
 
 export const createRiskColumns = (
-  onEditRisk: (risk: Risk) => void
+  onEditRisk: (r: Risk) => void,
+  onDeleteRisk: (id: number) => void
 ): ColumnDef<Risk>[] => [
   {
     accessorKey: "id",
@@ -23,22 +26,19 @@ export const createRiskColumns = (
       </Button>
     ),
   },
-  {
-    accessorKey: "location",
-    header: "Location",
-  },
+  { accessorKey: "location", header: "Location" },
   {
     accessorKey: "riskLevel",
     header: "Risk Level",
     cell: ({ row }) => {
-      const level = row.getValue("riskLevel") as Risk["riskLevel"]
+      const lvl = row.getValue("riskLevel") as Risk["riskLevel"]
       const color =
-        level === "High"
+        lvl === "High"
           ? "text-red-500"
-          : level === "Medium"
+          : lvl === "Medium"
           ? "text-yellow-500"
           : "text-green-500"
-      return <span className={color}>{level}</span>
+      return <span className={color}>{lvl}</span>
     },
   },
   {
@@ -50,17 +50,13 @@ export const createRiskColumns = (
         <div className="flex gap-2">
           <EditRiskDialog
             risk={risk}
-            onSave={(updatedRisk) => {
-              onEditRisk(updatedRisk)
-            }}
+            onSave={async (u) => onEditRisk(u)}
           />
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => console.log("Delete", risk.id)}
-          >
-            Delete
-          </Button>
+          <DeleteRiskDialog
+            riskId={risk.id}
+            location={risk.location}
+            onDelete={async (id) => onDeleteRisk(id)}
+          />
         </div>
       )
     },
