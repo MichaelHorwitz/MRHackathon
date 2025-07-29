@@ -8,11 +8,11 @@ export class Notification {
   @Column()
   title: string;
 
-  @Column()
-  created_at: Date;
+  @Column({nullable: true})
+  created_at?: Date;
 
-  @Column()
-  status: statusTypes;
+  @Column({default: 0})
+  status: number;
 }
 
 enum statusTypes{
