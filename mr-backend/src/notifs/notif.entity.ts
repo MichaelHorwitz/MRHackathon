@@ -13,6 +13,9 @@ export class Notification {
   @Column()
   title: string;
 
+  @Column({  default: () => 'CURRENT_TIMESTAMP',
+    nullable: true
+    })
   created_at: Date;
 
   @Column({ type: 'enum', enum: StatusType,  default: StatusType.Unread  })
