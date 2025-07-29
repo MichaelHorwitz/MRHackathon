@@ -23,8 +23,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-        cd mr-backend
-        npm install
+          cd mr-backend
+          npm install
 
       - name: Run unit tests
         run: npm test 
