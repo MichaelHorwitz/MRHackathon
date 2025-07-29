@@ -25,7 +25,7 @@ export function EditRiskDialog({ risk, onSave }: Props) {
     setSaving(true)
     await onSave(form)
     setSaving(false)
-    setOpen(false) // ✅ Close dialog after save
+    setOpen(false) 
   }
 
   return (
@@ -42,14 +42,28 @@ export function EditRiskDialog({ risk, onSave }: Props) {
             type="text"
             className="w-full border p-2 rounded"
             value={form.location}
-            onChange={(e) => setForm({ ...form, location: e.target.value })}
+            onChange={(e) => {
+                const newLocation = e.target.value
+                setForm((prev) => ({
+                  ...prev,
+                  location: newLocation,
+                  // reset checkedDate to today in YYYY-MM-DD form:
+                  checkedDate: new Date().toISOString().slice(0, 10),
+                }))
+              }}            
           />
           <select
             className="w-full border p-2 rounded"
             value={form.riskLevel}
-            onChange={(e) =>
-              setForm({ ...form, riskLevel: e.target.value as Risk["riskLevel"] })
-            }
+            onChange={(e) => {
+              const newLevel = e.target.value as Risk["riskLevel"]
+              setForm((prev) => ({
+                ...prev,
+                riskLevel: newLevel,
+                // bump checkedDate to today:
+                checkedDate: new Date().toISOString().slice(0, 10),
+              }))
+            }}
           >
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
