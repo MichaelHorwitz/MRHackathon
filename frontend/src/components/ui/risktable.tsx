@@ -1,3 +1,4 @@
+// components/ui/risktable.tsx
 "use client"
 
 import {
@@ -6,7 +7,6 @@ import {
   useReactTable,
   ColumnDef,
 } from "@tanstack/react-table"
-
 import {
   Table,
   TableBody,
@@ -15,19 +15,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Risk } from "./columns"
 
-import type { Risk } from "@/components/ui/columns"
-
-type DataTableProps = {
+type Props = {
   data: Risk[]
-  columns: (onEditRisk: (risk: Risk) => void) => ColumnDef<Risk, unknown>[]
-  onEditRisk: (risk: Risk) => void
+  columns: (
+    onEditRisk: (r: Risk) => void,
+    onDeleteRisk: (id: number) => void
+  ) => ColumnDef<Risk, unknown>[]
+  onEditRisk: (r: Risk) => void
+  onDeleteRisk: (id: number) => void
 }
 
-export function DataTable({ data, columns, onEditRisk }: DataTableProps) {
+export function DataTable({
+  data,
+  columns,
+  onEditRisk,
+  onDeleteRisk,
+}: Props) {
   const table = useReactTable({
     data,
-    columns: columns(onEditRisk),
+    columns: columns(onEditRisk, onDeleteRisk),
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -35,16 +43,13 @@ export function DataTable({ data, columns, onEditRisk }: DataTableProps) {
     <div className="rounded-md border">
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
+          {table.getHeaderGroups().map((hg) => (
+            <TableRow key={hg.id}>
+              {hg.headers.map((h) => (
+                <TableHead key={h.id}>
+                  {h.isPlaceholder
                     ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                    : flexRender(h.column.columnDef.header, h.getContext())}
                 </TableHead>
               ))}
             </TableRow>
@@ -53,7 +58,7 @@ export function DataTable({ data, columns, onEditRisk }: DataTableProps) {
         <TableBody>
           {table.getRowModel().rows.length > 0 ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+              <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -63,7 +68,10 @@ export function DataTable({ data, columns, onEditRisk }: DataTableProps) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
+              <TableCell
+                colSpan={table.getAllColumns().length}
+                className="h-24 text-center"
+              >
                 No results.
               </TableCell>
             </TableRow>

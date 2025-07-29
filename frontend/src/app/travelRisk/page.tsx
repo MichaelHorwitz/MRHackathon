@@ -1,6 +1,7 @@
+// app/(your-route)/page.tsx
 import { DataTable } from "@/components/ui/risktable"
 import { createRiskColumns } from "@/components/ui/columns"
-import { getTravelRisks, updateRisk } from "./action"
+import { getTravelRisks, updateRisk, deleteRisk } from "./action"
 
 export default async function Page() {
   const data = await getTravelRisks()
@@ -10,10 +11,20 @@ export default async function Page() {
     await updateRisk(risk)
   }
 
+  const handleDeleteRisk = async (id: number) => {
+    "use server"
+    await deleteRisk(id)
+  }
+
   return (
     <main className="p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Travel Risk Monitor</h1>
-      <DataTable columns={createRiskColumns} data={data} onEditRisk={handleEditRisk} />
+      <DataTable
+        data={data}
+        columns={createRiskColumns}
+        onEditRisk={handleEditRisk}
+        onDeleteRisk={handleDeleteRisk}
+      />
     </main>
   )
 }
