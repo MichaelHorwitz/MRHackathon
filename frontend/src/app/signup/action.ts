@@ -2,6 +2,7 @@
 
 import { client } from "@/api";
 import { getFormObject } from "@/lib/utils";
+import { redirect } from "next/navigation";
 import z from "zod";
 
 const signupSchema = z
@@ -36,14 +37,15 @@ export async function signup(_state: unknown, formData: FormData) {
       password: value.password,
     },
   });
-  console.log("DATA", result.data);
-  console.log("ERROR", result.error);
-
-  console.log(submission.data);
-  return {
-    error: {
-      data,
-      error: "Not Implemented",
-    },
-  };
+  if (result.error) {
+    // @ts-expect-error No error schema defined
+    console.log(result.error);
+    return {
+      error: {
+        data,
+        message: "Could not sign up. Please try again",
+      },
+    };
+  }
+  redirect("/login");
 }

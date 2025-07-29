@@ -2,6 +2,8 @@
 
 import { client } from "@/api";
 import { getFormObject } from "@/lib/utils";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import z from "zod";
 
 const loginSchema = z.object({
@@ -29,15 +31,28 @@ export async function login(state: unknown, formData: FormData) {
       password: value.password,
     },
   });
+  if (result.response.status === 401) {
+    return {
+      error: {
+        data,
+        message: "Email or password is incorrect",
+      },
+    };
+  } else if (result.error) {
+    // @ts-expect-error No error schema defined
+    console.log(result.error);
+    return {
+      error: {
+        data,
+        message: "Could not log in user. Please try again",
+      },
+    };
+  }
 
-  console.log("DATA", result.data);
-  console.log("ERROR", result.error);
+  const reqCookies = await cookies();
+  reqCookies.set("jwt", result.data.access_token, {
+    maxAge: 1 * 1000 * 60 * 60,
+  });
 
-  console.log(submission.data);
-  return {
-    error: {
-      data,
-      message: "Not implemented",
-    },
-  };
+  redirect("/");
 }
