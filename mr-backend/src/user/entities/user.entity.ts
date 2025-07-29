@@ -12,7 +12,7 @@ export class User {
   username: string;
 
   @Column({ nullable: true })
-  watch_list_notifications: string;
+  watch_list_notifications: boolean;
 
   @Column()
   password: string;

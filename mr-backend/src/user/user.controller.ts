@@ -4,56 +4,55 @@ import {
   Get,
   Post,
   Patch,
-  Param,
   Body,
   NotFoundException,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
-import { ResetPasswordDto } from './dto/password-reset.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/requests-formats';
+import { ResetPasswordDto } from './dto/requests-formats';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { SafeUser } from 'src/auth/auth.service';
+import { AuthenticatedRequest } from 'src/utils/types';
 
-@Controller('users')
+@Controller('profile')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @UseGuards(AuthGuard('jwt'))
+  @Get('profile')
+  @ApiBearerAuth()
+  async getProfile(@Request() req: AuthenticatedRequest): Promise<SafeUser> {
+    return req.user;
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number) {
-    const user = await this.userService.findOne(id);
-    if (!user) throw new NotFoundException('User not found');
-    return user;
-  }
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  @Post('signup')
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    const updated = await this.userService.update(id, updateUserDto);
+
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @Patch('update')
+  async update(@Request() req: AuthenticatedRequest, @Body() updateUserDto: UpdateUserDto) {
+    const updated = await this.userService.update(req.user.id, updateUserDto);
     if (!updated) throw new NotFoundException('User not found');
     return updated;
   }
 
-  @Patch(':id/reset-password')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   async resetPassword(
-    @Param('id') id: number,
+    @Request() req: AuthenticatedRequest,
     @Body() resetPasswordDto: ResetPasswordDto,
   ) {
-    const updated = await this.userService.resetPassword(id, resetPasswordDto);
+    const updated = await this.userService.resetPassword(req.user.id, resetPasswordDto);
     if (!updated) throw new NotFoundException('User not found');
     return updated;
   }
-
-  @Get('username/:username')
-  async findByUsername(@Param('username') username: string) {
-    const user = await this.userService.findByUsername(username);
-    if (!user) throw new NotFoundException('User not found');
-    return user;
-  }
 }
+

@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
-import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
-import { ResetPasswordDto } from './dto/password-reset.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/requests-formats';
+import { ResetPasswordDto } from './dto/requests-formats';
 
 // user.service.ts
 @Injectable()
@@ -39,7 +39,6 @@ export class UserService {
   }
 
   async update(id: number, dto: UpdateUserDto) {
-    // Do not allow updating password or salt here
     const user = await this.repo.findOneBy({ id });
     if (!user) return null;
 
@@ -51,11 +50,9 @@ export class UserService {
     const user: User | null = await this.repo.findOneBy({ id });
     if (!user) return null;
 
-    // Generate a random salt
     const { salt, hashedPassword } = this.saltAndHashPassword(dto.password);
     user.password = hashedPassword;
     user.salt = salt;
-    // Save the updated user
 
     return this.repo.save(user);
   }
