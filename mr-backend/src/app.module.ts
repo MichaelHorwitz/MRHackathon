@@ -7,6 +7,7 @@ import { UtilsService } from './utils/utils.service';
 import { HealthCheckService, HttpHealthIndicator, TerminusModule } from '@nestjs/terminus';
 import { UtilsModule } from './utils/utils.module';
 import { MonitoredDestinationModule } from './monitored-destination/monitored-destination.module';
+import { NotifsModule } from './notifs/notifs.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { MonitoredDestinationModule } from './monitored-destination/monitored-de
     }),
   UtilsModule,
   TerminusModule,
-  MonitoredDestinationModule
+  MonitoredDestinationModule,
+  NotifsModule
 
   ],
   controllers: [AppController],
