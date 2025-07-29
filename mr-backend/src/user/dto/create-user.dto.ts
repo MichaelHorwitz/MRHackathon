@@ -4,6 +4,8 @@ export class CreateUserDto {
   email: string;
   name: string;
   password: string;
+  watchedLocations: string;
+  expectedTravelDate: Date;
 }
 
 export class CreateUserResponseDto {
@@ -12,4 +14,5 @@ export class CreateUserResponseDto {
   email: string;
 }
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+export class UpdateUserDto extends PartialType(CreateUserDto) {
+}

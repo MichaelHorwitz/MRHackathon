@@ -24,7 +24,15 @@ export class UserService {
   }
   async create(dto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
-    return this.repo.save({ ...dto, password: hashedPassword });
+
+    dto.expectedTravelDate = dto.expectedTravelDate || new Date(); // Default to current date if not provided
+    let watchedLocations: string[] = [];
+    // watched locations update
+    if (dto.watchedLocations) {
+      watchedLocations = dto.watchedLocations.split(',').map(loc => loc.trim());
+    }
+
+    return this.repo.save({ ...dto, password: hashedPassword, watchedLocations, expectedTravelDate: dto.expectedTravelDate });
   }
   async update(id: number, dto: UpdateUserDto) {
     // First, find the existing user
@@ -33,13 +41,21 @@ export class UserService {
       return null;
     }
 
+    let watchedLocations: string[] = [];
+    // watched locations update
+    if (dto.watchedLocations) {
+      watchedLocations = dto.watchedLocations.split(',').map(loc => loc.trim());
+    }
+
     // Prepare update data
-    const updateData: Partial<User> = { ...dto };
+    const updateData: Partial<User> = { ...dto, watchedLocations };
 
     // Hash password if provided
     if (dto.password) {
       updateData.password = await bcrypt.hash(dto.password, 10);
     }
+
+
 
     // Merge with existing user data
     const updatedUser = this.repo.merge(existingUser, updateData);
