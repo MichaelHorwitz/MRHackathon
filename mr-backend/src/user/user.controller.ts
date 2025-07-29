@@ -9,6 +9,7 @@ import {
   Body,
   ParseIntPipe,
   NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -41,7 +42,11 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateUserDto,
   ): Promise<User> {
-    return this.userService.update(id, dto);
+    const result = await this.userService.update(id, dto);
+    if (!result) {
+      throw new InternalServerErrorException('Could not update');
+    }
+    return result;
   }
 
   /** DELETE /users/:id */

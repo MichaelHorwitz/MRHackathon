@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { LoaderCircleIcon } from "lucide-react";
 
-export function ProfileForm(props: { defaultValue?: Partial<ProfileData> }) {
+export function   ProfileForm(props: { defaultValue?: Partial<ProfileData> }) {
   const [state, action, pending] = useActionState(updateProfile, null);
 
   const formId = useId();
@@ -48,7 +48,7 @@ export function ProfileForm(props: { defaultValue?: Partial<ProfileData> }) {
               name="name"
               type="text"
               placeholder="First name, e.g. John"
-              defaultValue={props.defaultValue?.email}
+              defaultValue={props.defaultValue?.name}
             />
             {state?.error?.data["name"] && (
               <p className="text-destructive text-sm">
@@ -64,7 +64,7 @@ export function ProfileForm(props: { defaultValue?: Partial<ProfileData> }) {
               name="email"
               type="email"
               placeholder="placeholder@example.com"
-              defaultValue={state?.error?.data["email"] as string}
+              defaultValue={props.defaultValue?.email}
             />
           </div>
           <div className="space-y-3">

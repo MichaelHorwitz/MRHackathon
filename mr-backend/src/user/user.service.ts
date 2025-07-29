@@ -27,11 +27,25 @@ export class UserService {
     return this.repo.save({ ...dto, password: hashedPassword });
   }
   async update(id: number, dto: UpdateUserDto) {
-    const updateData = { ...dto, id };
+    // First, find the existing user
+    const existingUser = await this.repo.findOneBy({ id });
+    if (!existingUser) {
+      return null;
+    }
+
+    // Prepare update data
+    const updateData: Partial<User> = { ...dto };
+
+    // Hash password if provided
     if (dto.password) {
       updateData.password = await bcrypt.hash(dto.password, 10);
     }
-    return this.repo.save(updateData);
+
+    // Merge with existing user data
+    const updatedUser = this.repo.merge(existingUser, updateData);
+
+    // Save the merged entity
+    return this.repo.save(updatedUser);
   }
   async remove(id: number) {
     await this.repo.delete(id);

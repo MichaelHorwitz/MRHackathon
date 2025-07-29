@@ -108,7 +108,7 @@ export interface paths {
             cookie?: never;
         };
         get: operations["AuthController_getProfile"];
-        put?: never;
+        put: operations["AuthController_updateProfile"];
         post?: never;
         delete?: never;
         options?: never;
@@ -199,9 +199,15 @@ export interface components {
             name: string;
             email: string;
         };
-        SafeUser: {
+        ProfileResult: {
             id: number;
+            name: string;
             email: string;
+        };
+        UpdateProfileDto: {
+            email?: string;
+            name?: string;
+            password?: string;
         };
         User: {
             id: number;
@@ -517,7 +523,30 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SafeUser"];
+                    "application/json": components["schemas"]["ProfileResult"];
+                };
+            };
+        };
+    };
+    AuthController_updateProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileResult"];
                 };
             };
         };

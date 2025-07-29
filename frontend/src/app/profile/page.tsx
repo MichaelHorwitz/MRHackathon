@@ -9,10 +9,10 @@ export default async function Page() {
       Authorization: `Bearer ${token}`,
     },
   });
-
   return (
     <ProfileForm
       defaultValue={{
+        name: data.data?.name,
         email: data.data?.email,
       }}
     />

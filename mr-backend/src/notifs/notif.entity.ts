@@ -8,14 +8,14 @@ export class Notification {
   @Column()
   title: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   created_at?: Date;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   status: number;
 }
 
-enum statusTypes{
-    Read,
-    Unread
+enum statusTypes {
+  Read,
+  Unread,
 }

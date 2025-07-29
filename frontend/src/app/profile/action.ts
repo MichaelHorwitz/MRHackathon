@@ -1,6 +1,9 @@
 "use server";
 
+import { client } from "@/api";
 import { getFormObject } from "@/lib/utils";
+import { getBearerToken } from "@/lib/utils.server";
+import { redirect } from "next/navigation";
 import z from "zod";
 
 const profileSchema = z.object({
@@ -8,7 +11,7 @@ const profileSchema = z.object({
   email: z
     .email("Please enter a valid email")
     .nonempty("Email can not be empty"),
-  password: z.string().nonempty("Password can not be empty"),
+  password: z.string(),
   setting1: z.string().nonempty("Setting #1 can not be empty"),
   setting2: z.string().nonempty("Setting #2 can not be empty"),
 });
@@ -25,15 +28,27 @@ export async function updateProfile(_state: unknown, formData: FormData) {
         data,
         message: submission.error.issues[0]?.message,
       },
+    };  
+  }
+  const { data: value } = submission;
+  const token = await getBearerToken();
+  const result = await client.PUT("/auth/profile", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: {
+      email: value.email,
+      name: value.name,
+    }
+  });
+  if (result.response.status !== 200){
+    return {
+      error: {
+        data,
+        message: "Could not update",
+      },
     };
   }
-
-  await new Promise((res) => setTimeout(res, 1000));
-  console.log(submission.data);
-  return {
-    error: {
-      data,
-      message: "Not Implemented",
-    },
-  };
+  redirect("/profile")
+  // return result.data;
 }
