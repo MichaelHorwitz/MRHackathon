@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useActionState, useId } from "react";
+import { useActionState, useId, useState } from "react";
 import { updateProfile } from "./action";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,11 @@ export default function Page() {
   const emailId = useId();
   const passId = useId();
 
+  const set1Id = useId();
+  const set2Id = useId();
+
+  const [changed, setChanged] = useState(false);
+
   return (
     <Card className="max-w-lg mx-auto">
       <CardHeader>
@@ -31,7 +36,12 @@ export default function Page() {
         <CardDescription>Edit your profile details here.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={action} className="space-y-6" id={formId}>
+        <form
+          action={action}
+          className="space-y-6"
+          id={formId}
+          onChange={() => setChanged(true)}
+        >
           <div className="space-y-3">
             <Label htmlFor={nameId}>Name</Label>
             <Input
@@ -63,6 +73,29 @@ export default function Page() {
               defaultValue={state?.error?.data["password"] as string}
             />
           </div>
+          <fieldset className="rounded-md border px-3">
+            <legend className="ml-2 text-sm font-semibold">Preferences</legend>
+            <div className="space-y-6 my-3">
+              <div className="space-y-3">
+                <Label htmlFor={set1Id}>Setting #1</Label>
+                <Input
+                  id={set1Id}
+                  name="setting1"
+                  type="text"
+                  placeholder="Setting #1"
+                />
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor={set2Id}>Setting #2</Label>
+                <Input
+                  id={set2Id}
+                  name="setting2"
+                  type="text"
+                  placeholder="Setting #2"
+                />
+              </div>
+            </div>
+          </fieldset>
         </form>
       </CardContent>
       <CardFooter className="flex-col items-stretch gap-4">
@@ -72,7 +105,7 @@ export default function Page() {
             {state?.error.message}
           </p>
         )}
-        <Button form={formId} disabled={pending}>
+        <Button form={formId} disabled={pending || !changed}>
           {pending ? (
             <LoaderCircleIcon className="animate-spin" />
           ) : (

@@ -9,6 +9,8 @@ const profileSchema = z.object({
     .email("Please enter a valid email")
     .nonempty("Email can not be empty"),
   password: z.string().nonempty("Password can not be empty"),
+  setting1: z.string().nonempty("Setting #1 can not be empty"),
+  setting2: z.string().nonempty("Setting #2 can not be empty"),
 });
 
 export async function updateProfile(_state: unknown, formData: FormData) {
