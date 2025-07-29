@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UtilsModule } from './utils/utils.module';
 import { MonitoredDestinationModule } from './monitored-destination/monitored-destination.module';
+import { NotifsModule } from './notifs/notifs.module';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';

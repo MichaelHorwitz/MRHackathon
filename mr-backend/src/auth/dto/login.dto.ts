@@ -16,3 +16,8 @@ export class LoginDto {
   @IsString()
   password: string;
 }
+
+export class LoginResponseDto {
+  /** The JWT containing the logged-in user */
+  access_token: string;
+}
