@@ -36,13 +36,19 @@ export default function Page() {
             <Label htmlFor={emailId}>Email</Label>
             <Input
               id={emailId}
+              name="email"
               type="email"
               placeholder="placeholder@example.com"
             />
           </div>
           <div className="space-y-3">
             <Label htmlFor={passId}>Password</Label>
-            <Input id={passId} type="password" placeholder="********" />
+            <Input
+              id={passId}
+              name="password"
+              type="password"
+              placeholder="********"
+            />
           </div>
         </form>
       </CardContent>

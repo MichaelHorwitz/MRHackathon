@@ -38,6 +38,7 @@ export default function Page() {
             <Label htmlFor={nameId}>Name</Label>
             <Input
               id={nameId}
+              name="name"
               type="text"
               placeholder="First name, e.g. John"
             />
@@ -47,18 +48,29 @@ export default function Page() {
             <Label htmlFor={emailId}>Email</Label>
             <Input
               id={emailId}
+              name="email"
               type="email"
               placeholder="placeholder@example.com"
             />
           </div>
           <div className="space-y-3">
             <Label htmlFor={passId}>Password</Label>
-            <Input id={passId} type="password" placeholder="********" />
+            <Input
+              id={passId}
+              name="password"
+              type="password"
+              placeholder="********"
+            />
           </div>
 
           <div className="space-y-3">
             <Label htmlFor={confirmId}>Confirm Password</Label>
-            <Input id={confirmId} type="password" placeholder="********" />
+            <Input
+              id={confirmId}
+              name="confirmPassword"
+              type="password"
+              placeholder="********"
+            />
           </div>
         </form>
       </CardContent>
