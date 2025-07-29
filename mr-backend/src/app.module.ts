@@ -3,6 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UtilsController } from './utils/utils.controller';
+import { UtilsService } from './utils/utils.service';
+import { HealthCheckService, HttpHealthIndicator, TerminusModule } from '@nestjs/terminus';
+import { UtilsModule } from './utils/utils.module';
+import { MonitoredDestinationModule } from './monitored-destination/monitored-destination.module';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
@@ -16,13 +21,17 @@ import { JwtModule } from '@nestjs/jwt';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
-      port: 5432,
+      port: process.env.DB_PORT as unknown as number,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      autoLoadEntities: true,
     }),
+    UtilsModule,
+    TerminusModule,
+    MonitoredDestinationModule,
     AuthModule,
     UserModule,
     JwtModule.register({
