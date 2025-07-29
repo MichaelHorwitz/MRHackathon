@@ -2,8 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { DialogTrigger } from "@/components/ui/dialog"
+import { ArrowUpDown } from "lucide-react"
+import { EditRiskDialog } from "@/components/ui/editriskdialog"
 
 export type Risk = {
   id: number
@@ -11,7 +11,9 @@ export type Risk = {
   riskLevel: "Low" | "Medium" | "High"
 }
 
-export const columns: ColumnDef<Risk>[] = [
+export const createRiskColumns = (
+  onEditRisk: (risk: Risk) => void
+): ColumnDef<Risk>[] => [
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -29,7 +31,7 @@ export const columns: ColumnDef<Risk>[] = [
     accessorKey: "riskLevel",
     header: "Risk Level",
     cell: ({ row }) => {
-      const level = row.getValue("riskLevel") as "Low" | "Medium" | "High"
+      const level = row.getValue("riskLevel") as Risk["riskLevel"]
       const color =
         level === "High"
           ? "text-red-500"
@@ -43,12 +45,20 @@ export const columns: ColumnDef<Risk>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
+      const risk = row.original
       return (
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => alert("Edit " + row.original.id)}>
-            Edit
-          </Button>
-          <Button variant="destructive" size="sm" onClick={() => alert("Delete " + row.original.id)}>
+          <EditRiskDialog
+            risk={risk}
+            onSave={(updatedRisk) => {
+              onEditRisk(updatedRisk)
+            }}
+          />
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => console.log("Delete", risk.id)}
+          >
             Delete
           </Button>
         </div>

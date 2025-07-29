@@ -1,10 +1,10 @@
 "use client"
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  ColumnDef,
 } from "@tanstack/react-table"
 
 import {
@@ -16,18 +16,18 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-type DataTableProps<TData, TValue> = {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+import type { Risk } from "@/components/ui/columns"
+
+type DataTableProps = {
+  data: Risk[]
+  columns: (onEditRisk: (risk: Risk) => void) => ColumnDef<Risk, unknown>[]
+  onEditRisk: (risk: Risk) => void
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable({ data, columns, onEditRisk }: DataTableProps) {
   const table = useReactTable({
     data,
-    columns,
+    columns: columns(onEditRisk),
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -35,9 +35,9 @@ export function DataTable<TData, TValue>({
     <div className="rounded-md border">
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map(headerGroup => (
-            <TableRow className="px-2 py-1"  key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
                   {header.isPlaceholder
                     ? null
@@ -51,22 +51,19 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map(row => (
-              <TableRow className="px-2 py-1"  key={row.id}>
-                {row.getVisibleCells().map(cell => (
+          {table.getRowModel().rows.length > 0 ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
                 No results.
               </TableCell>
             </TableRow>

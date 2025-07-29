@@ -1,5 +1,6 @@
 "use server"
 
+
 import { Risk } from "@/components/ui/columns"
 
 // Temporary mock data (replace with DB call later)
@@ -14,5 +15,14 @@ export async function getTravelRisks(): Promise<Risk[]> {
     await new Promise(res => setTimeout(res, 500))
     return mockData
 }
+
+export async function updateRisk(risk: Risk): Promise<{ success: boolean }> {
+  // Replace with real DB logic
+  console.log("Updating risk:", risk)
+  await new Promise(res => setTimeout(res, 500))
+  return { success: true }
+}
+
+
 
 
