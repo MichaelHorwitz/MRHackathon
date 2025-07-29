@@ -1,6 +1,7 @@
 "use server";
 
 import { client, Risk, toResult } from "@/api";
+import { revalidatePath } from "next/cache";
 
 // Mock function to simulate fetching travel risks
 export async function getTravelRisks(): Promise<Risk[]> {
@@ -19,6 +20,7 @@ export async function updateRisk(risk: Risk): Promise<{ success: boolean }> {
     })
     .then(toResult);
 
+  revalidatePath("/travelRisk");
   return {
     success: !result.error,
   };
@@ -28,6 +30,7 @@ export async function deleteRisk(id: number): Promise<{ success: boolean }> {
   const result = await client
     .DELETE("/monitored-destination/{id}", { params: { path: { id: id } } })
     .then(toResult);
+  revalidatePath("/travelRisk");
 
   return {
     success: !result.error,
@@ -45,6 +48,7 @@ export async function insertRisk(payload: Omit<Risk, "id">) {
       },
     })
     .then(toResult);
+  revalidatePath("/travelRisk");
   return {
     success: !result.error,
   };
