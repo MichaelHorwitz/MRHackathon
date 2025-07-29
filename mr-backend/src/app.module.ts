@@ -6,6 +6,7 @@ import { UtilsController } from './utils/utils.controller';
 import { UtilsService } from './utils/utils.service';
 import { HealthCheckService, HttpHealthIndicator, TerminusModule } from '@nestjs/terminus';
 import { UtilsModule } from './utils/utils.module';
+import { MonitoredDestinationModule } from './monitored-destination/monitored-destination.module';
 
 @Module({
   imports: [
@@ -16,10 +17,13 @@ import { UtilsModule } from './utils/utils.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      autoLoadEntities: true,
     }),
   UtilsModule,
-  TerminusModule
+  TerminusModule,
+  MonitoredDestinationModule
 
   ],
   controllers: [AppController],
