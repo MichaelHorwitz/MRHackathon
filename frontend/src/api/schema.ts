@@ -199,6 +199,10 @@ export interface components {
             name: string;
             email: string;
         };
+        SafeUser: {
+            id: number;
+            email: string;
+        };
         User: {
             id: number;
             password: string;
@@ -513,7 +517,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["SafeUser"];
                 };
             };
         };

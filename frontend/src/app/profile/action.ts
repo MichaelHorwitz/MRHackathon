@@ -13,6 +13,8 @@ const profileSchema = z.object({
   setting2: z.string().nonempty("Setting #2 can not be empty"),
 });
 
+export type ProfileData = z.infer<typeof profileSchema>;
+
 export async function updateProfile(_state: unknown, formData: FormData) {
   console.log("Update Profile");
   const data = getFormObject(formData);

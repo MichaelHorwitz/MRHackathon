@@ -1,4 +1,4 @@
-import createClient from "openapi-fetch";
+import createClient, { Middleware } from "openapi-fetch";
 import { paths } from "./schema";
 
 export const client = createClient<paths>({

@@ -9,13 +9,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService, SafeUser } from './auth.service';
+import { AuthService } from './auth.service';
 import { LoginDto, LoginResponseDto } from './dto/login.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import {
   CreateUserDto,
   CreateUserResponseDto,
 } from 'src/user/dto/create-user.dto';
+import { SafeUser } from './auth.dto';
 
 interface AuthenticatedRequest extends Request {
   user: SafeUser;
