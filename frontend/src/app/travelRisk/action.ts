@@ -25,6 +25,7 @@ export async function updateRisk(risk: Risk): Promise<{ success: boolean }> {
   if (index !== -1) {
     mockData[index] = risk
   }
+  // add current data to checkedDate
   console.log("Updated risks:", mockData)
   // Return success status
   return { success: true }
