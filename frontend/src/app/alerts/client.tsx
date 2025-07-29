@@ -5,11 +5,11 @@ import { markAllAsRead, markAsRead } from "./action";
 import { useActionState } from "react";
 import { LoaderCircleIcon } from "lucide-react";
 
-export function MarkAllAsRead() {
+export function MarkAllAsRead(props: { disabled?: boolean }) {
   const [state, action, pending] = useActionState(markAllAsRead, null);
   return (
     <form action={action} className="flex items-center gap-1">
-      <Button disabled={pending}>
+      <Button disabled={props.disabled || pending}>
         {pending ? (
           <LoaderCircleIcon className="animate-spin" />
         ) : (

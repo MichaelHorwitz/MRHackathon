@@ -8,12 +8,13 @@ export default async function Page() {
   if (error) {
     throw new Error(`${error.statusCode} ${error.message}`);
   }
+  const allRead = data.every((a) => a.status === "Read");
 
   return (
     <div className="space-y-6 m-6">
       <header className="flex items-center gap-2">
         <h1 className="grow text-xl font-semibold">Notifications Dashboard</h1>
-        <MarkAllAsRead />
+        <MarkAllAsRead disabled={allRead} />
       </header>
       <ul>
         {data.map((item) => (
