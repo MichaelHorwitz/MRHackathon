@@ -33,6 +33,7 @@ import { TerminusModule } from '@nestjs/terminus';
     MonitoredDestinationModule,
     AuthModule,
     UserModule,
+    NotifsModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '60s' },
