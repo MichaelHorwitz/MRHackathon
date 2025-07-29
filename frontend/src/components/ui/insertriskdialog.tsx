@@ -1,7 +1,7 @@
 // components/ui/insertriskdialog.tsx
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,31 +9,35 @@ import {
   DialogTitle,
   DialogFooter,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import type { Risk } from "@/components/ui/columns"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Risk } from "@/api";
 
 type Props = {
-  onInsert: (payload: Omit<Risk, "id">) => Promise<void> | void
-}
+  onInsert: (payload: Omit<Risk, "id">) => Promise<void> | void;
+};
 
 export function InsertRiskDialog({ onInsert }: Props) {
-  const [open, setOpen] = useState(false)
-  const [form, setForm] = useState<Omit<Risk, "id">>({ 
-   location: "", 
-   riskLevel: "Low", 
-   checkedDate: new Date(),
- })
-  const [saving, setSaving] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState<Omit<Risk, "id">>({
+    location: "",
+    riskLevel: "normal",
+    lastChecked: new Date().toISOString(),
+  });
+  const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
-    setSaving(true)
-    await onInsert(form)
-    setSaving(false)
-    setOpen(false)
+    setSaving(true);
+    await onInsert(form);
+    setSaving(false);
+    setOpen(false);
     // reset form for next time
-    setForm({ location: "", riskLevel: "Low" ,checkedDate: new Date()})
-  }
+    setForm({
+      location: "",
+      riskLevel: "normal",
+      lastChecked: new Date().toISOString(),
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -68,9 +72,10 @@ export function InsertRiskDialog({ onInsert }: Props) {
                 }))
               }
             >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
+              <option value="do_not_travel">Do Not Travel</option>
+              <option value="high_risk">High Risk</option>
+              <option value="mild_risk">Mild Risk</option>
+              <option value="normal">Normal</option>
             </select>
           </div>
         </div>
@@ -88,5 +93,5 @@ export function InsertRiskDialog({ onInsert }: Props) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,46 +1,39 @@
 // app/(your-route)/page.tsx
-import { DataTable } from "@/components/ui/risktable"
-import { createRiskColumns } from "@/components/ui/columns"
-import { InsertRiskDialog } from "@/components/ui/insertriskdialog"
-import { Risk } from "@/components/ui/columns"
+import { DataTable } from "@/components/ui/risktable";
+import { createRiskColumns } from "@/components/ui/columns";
+import { InsertRiskDialog } from "@/components/ui/insertriskdialog";
 
-import {
-  getTravelRisks,
-  updateRisk,
-  deleteRisk,
-  insertRisk,
-} from "./action"
+import { getTravelRisks, updateRisk, deleteRisk, insertRisk } from "./action";
+import { Risk } from "@/api";
 
 export default async function Page() {
-  const data = await getTravelRisks()
+  const data = await getTravelRisks();
 
   const handleEditRisk = async (risk: any) => {
-    "use server"
-    await updateRisk(risk)
-  }
+    "use server";
+    await updateRisk(risk);
+  };
 
   const handleDeleteRisk = async (id: number) => {
-    "use server"
-    await deleteRisk(id)
-  }
+    "use server";
+    await deleteRisk(id);
+  };
 
-    const handleInsertRisk = async (payload: Omit<Risk, "id" | "checkedDate"> & { checkedDate:  Date}) => {
-    "use server"
-    await insertRisk(payload)
-    }
+  const handleInsertRisk = async (payload: Omit<Risk, "id">) => {
+    "use server";
+    await insertRisk(payload);
+  };
 
-  
-
-    return (
+  return (
     <main className="p-6 space-y-4">
-        <h1 className="text-2xl font-semibold">Travel Risk Monitor</h1>
-        <DataTable
+      <h1 className="text-2xl font-semibold">Travel Risk Monitor</h1>
+      <DataTable
         data={data}
-        columns={createRiskColumns} 
+        columns={createRiskColumns}
         onEditRisk={handleEditRisk}
         onDeleteRisk={handleDeleteRisk}
-        />
-    <InsertRiskDialog onInsert={handleInsertRisk} />
+      />
+      <InsertRiskDialog onInsert={handleInsertRisk} />
     </main>
-    )
+  );
 }
