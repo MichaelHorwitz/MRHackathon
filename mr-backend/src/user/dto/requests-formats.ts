@@ -15,7 +15,7 @@ export class CreateUserDto {
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   @IsString()
-  username?: string;
+  name?: string;
 
   @IsOptional()
   @IsBoolean()

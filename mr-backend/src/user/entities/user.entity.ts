@@ -9,7 +9,7 @@ export class User {
   email: string;
 
   @Column({ unique: true })
-  username: string;
+  name: string;
 
   @Column({ nullable: true })
   watch_list_notifications: boolean;
