@@ -1,58 +1,59 @@
-// src/user/user.controller.ts
+// user.controller.ts
 import {
   Controller,
   Get,
   Post,
-  Put,
-  Delete,
+  Patch,
   Param,
   Body,
-  ParseIntPipe,
   NotFoundException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
+import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
+import { ResetPasswordDto } from './dto/password-reset.dto';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  /** GET /users */
   @Get()
-  async findAll(): Promise<User[]> {
+  findAll() {
     return this.userService.findAll();
   }
 
-  /** GET /users/:id */
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+  async findOne(@Param('id') id: number) {
     const user = await this.userService.findOne(id);
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
+    if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
-  /** POST /users */
   @Post()
-  async create(@Body() dto: CreateUserDto): Promise<User> {
-    return this.userService.create(dto);
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
-  /** PUT /users/:id */
-  @Put(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateUserDto,
-  ): Promise<User> {
-    return this.userService.update(id, dto);
+  @Patch(':id')
+  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+    const updated = await this.userService.update(id, updateUserDto);
+    if (!updated) throw new NotFoundException('User not found');
+    return updated;
   }
 
-  /** DELETE /users/:id */
-  @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.userService.remove(id);
+  @Patch(':id/reset-password')
+  async resetPassword(
+    @Param('id') id: number,
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ) {
+    const updated = await this.userService.resetPassword(id, resetPasswordDto);
+    if (!updated) throw new NotFoundException('User not found');
+    return updated;
+  }
+
+  @Get('username/:username')
+  async findByUsername(@Param('username') username: string) {
+    const user = await this.userService.findByUsername(username);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 }

@@ -2,8 +2,9 @@ import { User } from './user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto, UpdateUserDto, ResetPasswordDto } from './dto';
 import * as crypto from 'crypto';
+import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
+import { ResetPasswordDto } from './dto/password-reset.dto';
 
 // user.service.ts
 @Injectable()
