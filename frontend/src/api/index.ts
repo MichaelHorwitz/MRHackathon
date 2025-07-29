@@ -1,6 +1,7 @@
 import createClient, { Middleware, FetchResponse } from "openapi-fetch";
 import { paths } from "./schema";
 import z from "zod";
+export * from "./types";
 
 export const client = createClient<paths>({
   // TODO: Change this to an environment variable
