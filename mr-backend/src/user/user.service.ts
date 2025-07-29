@@ -1,4 +1,3 @@
-import { User } from './user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -6,7 +5,6 @@ import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
 import { ResetPasswordDto } from './dto/password-reset.dto';
-import * as bcrypt from 'bcrypt';
 
 // user.service.ts
 @Injectable()
@@ -14,7 +12,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly repo: Repository<User>,
-  ) {}
+  ) { }
 
   findAll() {
     return this.repo.find();
@@ -26,9 +24,18 @@ export class UserService {
   findOneByEmail(email: string) {
     return this.repo.findOneBy({ email });
   }
+
+  saltAndHashPassword(password: string): { salt: string; hashedPassword: string } {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.createHash('sha256');
+    hash.update(password + salt);
+    const hashedPassword = hash.digest('hex');
+    return { salt, hashedPassword };
+  }
+
   async create(dto: CreateUserDto) {
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
-    return this.repo.save({ ...dto, password: hashedPassword });
+    const { salt, hashedPassword } = this.saltAndHashPassword(dto.password);
+    return this.repo.save({ ...dto, password: hashedPassword, salt });
   }
 
   async update(id: number, dto: UpdateUserDto) {
@@ -45,13 +52,10 @@ export class UserService {
     if (!user) return null;
 
     // Generate a random salt
-    const salt = crypto.randomBytes(16).toString('hex');
-
-    // Hash the password with SHA-256 and salt
-    const hash = crypto.createHash('sha256');
-    hash.update(dto.password + salt);
-    user.password = hash.digest('hex');
+    const { salt, hashedPassword } = this.saltAndHashPassword(dto.password);
+    user.password = hashedPassword;
     user.salt = salt;
+    // Save the updated user
 
     return this.repo.save(user);
   }
