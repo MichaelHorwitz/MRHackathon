@@ -13,9 +13,13 @@ export class Notification {
   @Column()
   title: string;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({ type: 'enum', enum: StatusType, default: StatusType.Unread })
+  @Column({ type: 'enum', enum: StatusType,  default: StatusType.Unread  })
   status: StatusType;
+}
+
+enum statusTypes {
+  Read,
+  Unread,
 }

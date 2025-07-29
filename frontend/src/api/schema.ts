@@ -108,7 +108,7 @@ export interface paths {
             cookie?: never;
         };
         get: operations["AuthController_getProfile"];
-        put?: never;
+        put: operations["AuthController_updateProfile"];
         post?: never;
         delete?: never;
         options?: never;
@@ -257,22 +257,61 @@ export interface components {
             email: string;
             name: string;
             password: string;
+            watchedLocations: string;
+            /** Format: date-time */
+            expectedTravelDate: string;
         };
         CreateUserResponseDto: {
             id: number;
             name: string;
             email: string;
         };
+        ProfileResult: {
+            id: number;
+            name: string;
+            email: string;
+            /** Format: date-time */
+            expectedTravelDate: string;
+            watchedLocations: string;
+        };
+        UpdateProfileDto: {
+            /** Format: date-time */
+            expectedTravelDate: string;
+            watchedLocations: string;
+            email?: string;
+            name?: string;
+            password?: string;
+        };
         User: {
             id: number;
             password: string;
             name: string;
             email: string;
+            /** Format: date-time */
+            expectedTravelDate: string;
+            watchedLocations: string[];
         };
         UpdateUserDto: {
             email?: string;
             name?: string;
             password?: string;
+            watchedLocations?: string;
+            /** Format: date-time */
+            expectedTravelDate?: string;
+        };
+        Notification: {
+            id: number;
+            title: string;
+            /** Format: date-time */
+            created_at: string;
+            /** @enum {string} */
+            status: "Read" | "Unread";
+        };
+        CreateNotificationDto: {
+            title: string;
+        };
+        UpdateNotificationDto: {
+            title?: string;
         };
         Notification: {
             id: number;
@@ -591,7 +630,30 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["ProfileResult"];
+                };
+            };
+        };
+    };
+    AuthController_updateProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileResult"];
                 };
             };
         };

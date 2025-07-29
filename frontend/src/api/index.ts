@@ -1,4 +1,4 @@
-import createClient, { FetchResponse } from "openapi-fetch";
+import createClient, { Middleware, FetchResponse } from "openapi-fetch";
 import { paths } from "./schema";
 import z from "zod";
 

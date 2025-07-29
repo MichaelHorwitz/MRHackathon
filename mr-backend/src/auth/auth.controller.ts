@@ -4,18 +4,24 @@ import {
   ConflictException,
   Controller,
   Get,
+  Logger,
+  NotFoundException,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService, SafeUser } from './auth.service';
+import { AuthService } from './auth.service';
 import { LoginDto, LoginResponseDto } from './dto/login.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import {
   CreateUserDto,
   CreateUserResponseDto,
 } from 'src/user/dto/create-user.dto';
+import { SafeUser } from './auth.dto';
+import { UserService } from 'src/user/user.service';
+import { ProfileResult, UpdateProfileDto } from './dto/profile.dto';
 
 interface AuthenticatedRequest extends Request {
   user: SafeUser;
@@ -26,7 +32,10 @@ interface DatabaseError extends Error {
 }
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
   @UseGuards(AuthGuard('local'))
   @Post('login')
   login(
@@ -56,7 +65,42 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   @ApiBearerAuth()
-  getProfile(@Request() req: AuthenticatedRequest): SafeUser {
-    return req.user;
+  async getProfile(
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ProfileResult> {
+    const result = await this.userService.findOne(req.user.id);
+    if (!result) {
+      throw new NotFoundException('Could not find user');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...sanitizedResult } = result;
+    //watchedLocations
+    return {
+      ...sanitizedResult,
+      watchedLocations: Array.isArray(sanitizedResult.watchedLocations)
+        ? sanitizedResult.watchedLocations.join(', ')
+        : sanitizedResult.watchedLocations,
+    };
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Put('profile')
+  @ApiBearerAuth()
+  async updateProfile(
+    @Body() dto: UpdateProfileDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ProfileResult> {
+    const result = await this.userService.update(req.user.id, dto);
+    if (!result) {
+      throw new NotFoundException('Could not find user');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...sanitizedResult } = result;
+    Logger.debug(`Updated: ${JSON.stringify(sanitizedResult)}`);
+    return {
+      ...sanitizedResult,
+      watchedLocations: Array.isArray(sanitizedResult.watchedLocations)
+        ? sanitizedResult.watchedLocations.join(', ')
+        : sanitizedResult.watchedLocations,
+    };
   }
 }
