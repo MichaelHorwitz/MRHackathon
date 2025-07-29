@@ -5,9 +5,9 @@ import { Risk } from "@/components/ui/columns"
 
 // Temporary mock data (replace with DB call later)
 const mockData: Risk[] = [
-    { id: 1, location: "Cairo, Egypt",checkedDate: "2025-07-28", riskLevel: "High" },
-    { id: 2, location: "Oslo, Norway",checkedDate: "2025-07-28", riskLevel: "Low" },
-    { id: 3, location: "Bangkok, Thailand",checkedDate: "2025-07-28", riskLevel: "Medium" },
+    { id: 1, location: "Cairo, Egypt",checkedDate: new Date("2025-07-28"), riskLevel: "High" },
+    { id: 2, location: "Oslo, Norway",checkedDate: new Date("2025-07-28"), riskLevel: "Low" },
+    { id: 3, location: "Bangkok, Thailand",checkedDate: new Date("2025-07-28"), riskLevel: "Medium" },
 ]
 // Mock function to simulate fetching travel risks  
 export async function getTravelRisks(): Promise<Risk[]> {

@@ -24,7 +24,7 @@ export default async function Page() {
     await deleteRisk(id)
   }
 
-    const handleInsertRisk = async (payload: Omit<Risk, "id" | "checkedDate"> & { checkedDate: string }) => {
+    const handleInsertRisk = async (payload: Omit<Risk, "id" | "checkedDate"> & { checkedDate:  Date}) => {
     "use server"
     await insertRisk(payload)
     }
