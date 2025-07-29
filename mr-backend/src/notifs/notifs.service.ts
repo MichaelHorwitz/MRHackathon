@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Notification } from './notif.entity';
+import { Notification, StatusType } from './notif.entity';
 import {
   CreateNotificationDto,
   UpdateNotificationDto,
@@ -29,13 +29,13 @@ export class NotifsService {
     return this.repo.find();
   }
   async markAllAsRead() {
-    this.repo.updateAll({ status: 1 });
+    this.repo.updateAll({ status: StatusType.Read });
   }
   async markAsRead(id: number) {
     const response = await this.repo.findOneBy({ id: id });
 
     if (response) {
-      response.status = 1;
+      response.status = StatusType.Read;
       await this.repo.save(response);
     }
   }

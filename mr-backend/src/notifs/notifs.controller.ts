@@ -39,7 +39,7 @@ export class NotifsController {
   }
 
   @Patch(':id/read')
-  async markAsRead(@Param('id') id: number) {
+  async markAsRead(@Param('id', ParseIntPipe) id: number) {
     console.log('Read');
     this.notifsService.markAsRead(id);
   }
