@@ -7,6 +7,6 @@ import { TerminusModule } from '@nestjs/terminus';
 @Module({
   imports: [TerminusModule, HttpModule],
   controllers: [UtilsController],
-  providers: [UtilsService]
+  providers: [UtilsService],
 })
 export class UtilsModule {}
