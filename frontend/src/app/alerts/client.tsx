@@ -1,9 +1,24 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { markAsRead } from "./action";
+import { markAllAsRead, markAsRead } from "./action";
 import { useActionState } from "react";
 import { LoaderCircleIcon } from "lucide-react";
+
+export function MarkAllAsRead() {
+  const [state, action, pending] = useActionState(markAllAsRead, null);
+  return (
+    <form action={action} className="flex items-center gap-1">
+      <Button disabled={pending}>
+        {pending ? (
+          <LoaderCircleIcon className="animate-spin" />
+        ) : (
+          "Mark all as read"
+        )}
+      </Button>
+    </form>
+  );
+}
 
 export function MarkAsRead(props: { id: number }) {
   const [state, action, pending] = useActionState(markAsRead, null);

@@ -187,9 +187,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["NotifsController_markAllAsRead"];
+        get?: never;
         put?: never;
-        post?: never;
+        post: operations["NotifsController_markAllAsRead"];
         delete?: never;
         options?: never;
         head?: never;
@@ -827,7 +827,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };

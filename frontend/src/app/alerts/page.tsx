@@ -1,7 +1,7 @@
 import { client, toResult } from "@/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { MarkAsRead } from "./client";
+import { MarkAllAsRead, MarkAsRead } from "./client";
 
 export default async function Page() {
   const { data, error } = await client.GET("/notifs").then(toResult);
@@ -11,7 +11,10 @@ export default async function Page() {
 
   return (
     <div className="space-y-6 m-6">
-      <h1 className="text-xl font-semibold">Notifications Dashboard</h1>
+      <header className="flex items-center gap-2">
+        <h1 className="grow text-xl font-semibold">Notifications Dashboard</h1>
+        <MarkAllAsRead />
+      </header>
       <ul>
         {data.map((item) => (
           <Card key={item.id} className="p-2 pl-4 items-center flex-row">
