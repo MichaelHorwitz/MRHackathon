@@ -32,7 +32,7 @@ export async function signup(_state: unknown, formData: FormData) {
   return {
     error: {
       data,
-      error: "Not Implemented",
+      message: "Not Implemented",
     },
   };
 }
