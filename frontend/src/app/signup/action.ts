@@ -1,6 +1,8 @@
 "use server";
 
+import { client } from "@/api";
 import { getFormObject } from "@/lib/utils";
+import { redirect } from "next/navigation";
 import z from "zod";
 
 const signupSchema = z
@@ -26,13 +28,24 @@ export async function signup(_state: unknown, formData: FormData) {
       },
     };
   }
+  const { data: value } = submission;
 
-  await new Promise((res) => setTimeout(res, 1000));
-  console.log(submission.data);
-  return {
-    error: {
-      data,
-      message: "Not Implemented",
+  const result = await client.POST("/auth/signUp", {
+    body: {
+      email: value.email,
+      name: value.name,
+      password: value.password,
     },
-  };
+  });
+  if (result.error) {
+    // @ts-expect-error No error schema defined
+    console.log(result.error);
+    return {
+      error: {
+        data,
+        message: "Could not sign up. Please try again",
+      },
+    };
+  }
+  redirect("/login");
 }
