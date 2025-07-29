@@ -6,4 +6,10 @@ export class CreateUserDto {
   password: string;
 }
 
+export class CreateUserResponseDto {
+  id: number;
+  name: string;
+  email: string;
+}
+
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
