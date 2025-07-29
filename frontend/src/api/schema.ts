@@ -313,6 +313,20 @@ export interface components {
         UpdateNotificationDto: {
             title?: string;
         };
+        Notification: {
+            id: number;
+            title: string;
+            /** Format: date-time */
+            created_at: string;
+            /** @enum {string} */
+            status: "Read" | "Unread";
+        };
+        CreateNotificationDto: {
+            title: string;
+        };
+        UpdateNotificationDto: {
+            title?: string;
+        };
     };
     responses: never;
     parameters: never;
