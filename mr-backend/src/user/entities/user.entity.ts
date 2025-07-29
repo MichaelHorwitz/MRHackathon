@@ -17,6 +17,6 @@ export class User {
   @Column()
   expectedTravelDate: Date;
 
-  @Column()
+  @Column('text', { array: true, default: [] })
   watchedLocations: string[];
 }
