@@ -13,17 +13,11 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  /** GET /users */
-  @Get()
-  async findAll(): Promise<User[]> {
-    return this.userService.findAll();
-  }
 
   /** GET /users/:id */
   @Get(':id')

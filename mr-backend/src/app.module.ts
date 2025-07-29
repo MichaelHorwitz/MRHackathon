@@ -1,15 +1,20 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UtilsController } from './utils/utils.controller';
-import { UtilsService } from './utils/utils.service';
-import { HealthCheckService, HttpHealthIndicator, TerminusModule } from '@nestjs/terminus';
 import { UtilsModule } from './utils/utils.module';
 import { MonitoredDestinationModule } from './monitored-destination/monitored-destination.module';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // makes ConfigModule global, no need to import elsewhere
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -21,13 +26,17 @@ import { MonitoredDestinationModule } from './monitored-destination/monitored-de
       synchronize: true,
       autoLoadEntities: true,
     }),
-  UtilsModule,
-  TerminusModule,
-  MonitoredDestinationModule
-
+    UtilsModule,
+    TerminusModule,
+    MonitoredDestinationModule,
+    AuthModule,
+    UserModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '60s' },
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
-  // providers: [AppService, UtilsService, HealthCheckService, HttpHealthIndicator],
-})  
+  providers: [AppService, AuthService],
+})
 export class AppModule {}
