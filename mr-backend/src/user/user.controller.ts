@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   NotFoundException,
   InternalServerErrorException,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -32,7 +33,9 @@ export class UserController {
 
   /** POST /users */
   @Post()
-  async create(@Body() dto: CreateUserDto): Promise<User> {
+  async create(
+    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) dto: CreateUserDto
+  ): Promise<User> {
     return this.userService.create(dto);
   }
 
@@ -40,7 +43,7 @@ export class UserController {
   @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateUserDto,
+    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) dto: UpdateUserDto,
   ): Promise<User> {
     const result = await this.userService.update(id, dto);
     if (!result) {
