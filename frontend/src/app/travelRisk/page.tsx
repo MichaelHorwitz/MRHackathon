@@ -1,7 +1,15 @@
 // app/(your-route)/page.tsx
 import { DataTable } from "@/components/ui/risktable"
 import { createRiskColumns } from "@/components/ui/columns"
-import { getTravelRisks, updateRisk, deleteRisk } from "./action"
+import { InsertRiskDialog } from "@/components/ui/insertriskdialog"
+import { Risk } from "@/components/ui/columns"
+
+import {
+  getTravelRisks,
+  updateRisk,
+  deleteRisk,
+  insertRisk,
+} from "./action"
 
 export default async function Page() {
   const data = await getTravelRisks()
@@ -16,15 +24,23 @@ export default async function Page() {
     await deleteRisk(id)
   }
 
-  return (
+    const handleInsertRisk = async (payload: Omit<Risk, "id" | "checkedDate"> & { checkedDate: string }) => {
+    "use server"
+    await insertRisk(payload)
+    }
+
+  
+
+    return (
     <main className="p-6 space-y-4">
-      <h1 className="text-2xl font-semibold">Travel Risk Monitor</h1>
-      <DataTable
+        <h1 className="text-2xl font-semibold">Travel Risk Monitor</h1>
+        <DataTable
         data={data}
-        columns={createRiskColumns}
+        columns={createRiskColumns} 
         onEditRisk={handleEditRisk}
         onDeleteRisk={handleDeleteRisk}
-      />
+        />
+    <InsertRiskDialog onInsert={handleInsertRisk} />
     </main>
-  )
+    )
 }
