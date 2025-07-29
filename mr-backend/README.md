@@ -96,3 +96,11 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Yarn testing
+
+To run tests while using Yarn, run the following:
+yarn test
+for testing without coverage
+yarn test:cov
+for testing with coverage

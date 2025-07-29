@@ -1,21 +1,19 @@
-// src/monitored-destination/monitored-destination.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { MonitoredDestinationService } from './monitored-destination.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { MonitoredDestination } from './entities/monitored-destination.entity'; // Import your entity
+import { MonitoredDestination } from './entities/monitored-destination.entity';
+import { Repository } from 'typeorm';
 
 describe('MonitoredDestinationService', () => {
   let service: MonitoredDestinationService;
-  let mockMonitoredDestinationRepository: any;
+  let mockRepo: jest.Mocked<Partial<Repository<MonitoredDestination>>>;
 
   beforeEach(async () => {
-    mockMonitoredDestinationRepository = {
+    mockRepo = {
       find: jest.fn(),
-      findOne: jest.fn(),
+      findOneBy: jest.fn(),
       save: jest.fn(),
-      create: jest.fn(),
       delete: jest.fn(),
-      // Add other methods used by MonitoredDestinationService
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -23,7 +21,7 @@ describe('MonitoredDestinationService', () => {
         MonitoredDestinationService,
         {
           provide: getRepositoryToken(MonitoredDestination),
-          useValue: mockMonitoredDestinationRepository,
+          useValue: mockRepo,
         },
       ],
     }).compile();
@@ -35,5 +33,70 @@ describe('MonitoredDestinationService', () => {
     expect(service).toBeDefined();
   });
 
-  // Add more specific tests for MonitoredDestinationService methods here
+  describe('create', () => {
+    it('should call save with the correct DTO', async () => {
+      const dto = { name: 'Test Destination', location: 'Test Location', riskLevel: 'Low', lastChecked: new Date() };
+      const saved = { id: 1, ...dto };
+      (mockRepo.save as jest.Mock).mockResolvedValue(saved as MonitoredDestination);
+
+      const result = await service.create(dto as any);
+      expect(mockRepo.save).toHaveBeenCalledWith(dto);
+      expect(result).toEqual(saved);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return all monitored destinations', async () => {
+      const destinations = [{ id: 1 }, { id: 2 }];
+      (mockRepo.find as jest.Mock).mockResolvedValue(destinations as MonitoredDestination[]);
+
+      const result = await service.findAll();
+      expect(mockRepo.find).toHaveBeenCalled();
+      expect(result).toEqual(destinations);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a monitored destination by id', async () => {
+      const destination = { 
+        id: 1, 
+        name: 'Somewhere', 
+        location: 'Test Location', 
+        riskLevel: 'Low', 
+        lastChecked: new Date() 
+      };
+      (mockRepo.findOneBy as jest.Mock).mockResolvedValue(destination as MonitoredDestination);
+
+      const result = await service.findOne(1);
+      expect(mockRepo.findOneBy).toHaveBeenCalledWith({ id: 1 });
+      expect(result).toEqual(destination);
+    });
+  });
+
+  describe('update', () => {
+    it('should update and return the monitored destination', async () => {
+      const dto = { name: 'Updated Name' };
+      const updated = { 
+        id: 1, 
+        name: 'Updated Name', 
+        location: 'Test Location', 
+        riskLevel: 'Low', 
+        lastChecked: new Date() 
+      };
+      (mockRepo.save as jest.Mock).mockResolvedValue(updated as MonitoredDestination);
+
+      const result = await service.update(1, dto as any);
+      expect(mockRepo.save).toHaveBeenCalledWith({ id: 1, ...dto });
+      expect(result).toEqual(updated);
+    });
+  });
+
+  describe('remove', () => {
+    it('should delete the monitored destination by id', async () => {
+      (mockRepo.delete as jest.Mock).mockResolvedValue({ affected: 1 });
+
+      await service.remove(1);
+      expect(mockRepo.delete).toHaveBeenCalledWith(1);
+    });
+  });
 });
