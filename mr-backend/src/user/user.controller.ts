@@ -1,0 +1,58 @@
+// src/user/user.controller.ts
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  ParseIntPipe,
+  NotFoundException,
+} from '@nestjs/common';
+import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/create-user.dto';
+import { User } from './user.entity';
+
+@Controller('users')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  /** GET /users */
+  @Get()
+  async findAll(): Promise<User[]> {
+    return this.userService.findAll();
+  }
+
+    /** GET /users/:id */
+    @Get(':id')
+    async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+      const user = await this.userService.findOne(id);
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+      return user;
+    }
+
+  /** POST /users */
+  @Post()
+  async create(@Body() dto: CreateUserDto): Promise<User> {
+    return this.userService.create(dto);
+  }
+
+  /** PUT /users/:id */
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateUserDto,
+  ): Promise<User> {
+    return this.userService.update(id, dto);
+  }
+
+  /** DELETE /users/:id */
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.userService.remove(id);
+  }
+}
