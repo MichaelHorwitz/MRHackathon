@@ -1,23 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotifsService } from './notifs.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Notification } from './notif.entity';
+import { Notification, StatusType } from './notif.entity';
 import { ObjectLiteral, Repository } from 'typeorm';
-import { CreateNotificationDto, UpdateNotificationDto } from './dto/create-notif.dto';
+import {
+  CreateNotificationDto,
+  UpdateNotificationDto,
+} from './dto/create-notif.dto';
 
 // Helper type and factory for a mocked TypeORM repository
 type MockType<T> = {
   [P in keyof T]?: jest.Mock<any, any>;
 };
 
-function createMockRepository<T extends ObjectLiteral = any>(): MockType<Repository<T>> {
+function createMockRepository<T extends ObjectLiteral = any>(): MockType<
+  Repository<T>
+> {
   return {
     find: jest.fn(),
     findOneBy: jest.fn(),
     save: jest.fn(),
     delete: jest.fn(),
     update: jest.fn(),
-    updateAll: jest.fn()
+    updateAll: jest.fn(),
   } as unknown as MockType<Repository<T>>;
 }
 
@@ -102,7 +107,10 @@ describe('NotifsService', () => {
       await service.markAsRead(1);
 
       expect(mockRepo.findOneBy).toHaveBeenCalledWith({ id: 1 });
-      expect(mockRepo.save).toHaveBeenCalledWith({ ...notif, status: 1 });
+      expect(mockRepo.save).toHaveBeenCalledWith({
+        ...notif,
+        status: StatusType.Read,
+      });
     });
 
     it('should do nothing if notification not found', async () => {
