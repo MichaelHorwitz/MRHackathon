@@ -38,6 +38,7 @@ export class AuthService {
     };
   }
   signUp(user: CreateUserDto) {
-    return this.userService.create(user);
+    const result = this.userService.create(user);
+    return result;
   }
 }

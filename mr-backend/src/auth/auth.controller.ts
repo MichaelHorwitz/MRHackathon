@@ -1,5 +1,7 @@
 import {
+  BadRequestException,
   Body,
+  ConflictException,
   Controller,
   Get,
   Post,
@@ -15,7 +17,10 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 interface AuthenticatedRequest extends Request {
   user: SafeUser;
 }
-
+interface DatabaseError extends Error {
+  code?: string;
+  constraint?: string;
+}
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -26,9 +31,21 @@ export class AuthController {
   }
   @Post('signUp')
   async signUp(@Body() dto: CreateUserDto) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...result } = await this.authService.signUp(dto);
-    return result;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _, ...result } = await this.authService.signUp(dto);
+      return result;
+    } catch (error: unknown) {
+      console.log('SignUp error:', error);
+
+      const dbError = error as DatabaseError;
+
+      if (dbError.code === '23505') {
+        throw new ConflictException('User already exists');
+      }
+
+      throw new BadRequestException('Failed to create user');
+    }
   }
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
