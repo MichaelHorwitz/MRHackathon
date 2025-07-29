@@ -1,5 +1,6 @@
 "use server";
 
+import { client } from "@/api";
 import { getFormObject } from "@/lib/utils";
 import z from "zod";
 
@@ -20,7 +21,17 @@ export async function login(state: unknown, formData: FormData) {
       },
     };
   }
-  await new Promise((res) => setTimeout(res, 1000));
+  const { data: value } = submission;
+
+  const result = await client.POST("/auth/login", {
+    body: {
+      email: value.email,
+      password: value.password,
+    },
+  });
+
+  console.log("DATA", result.data);
+  console.log("ERROR", result.error);
 
   console.log(submission.data);
   return {
