@@ -26,7 +26,11 @@ export class NotifsService {
     private readonly repo: Repository<Notification>,
   ) {}
   getAllNotifs() {
-    return this.repo.find();
+    return this.repo.find({
+      order: {
+        created_at: 'DESC',
+      },
+    });
   }
   async markAllAsRead() {
     this.repo.updateAll({ status: StatusType.Read });
